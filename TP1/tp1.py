@@ -13,6 +13,13 @@ LARGO_PLANCHA = 5
 ANCHO_PLANCHA = 4
 DISCRETIZACION = 0.5
 
+
+def imprimir_plancha (vector, ancho, largo):
+    for i in range(ancho):
+        for j in range (largo):
+
+            print("{:.0f}".format(vector[ j + i * largo]), end=" ")
+        print("\n")
 def imprimir_matriz (matriz):
     f=0
     for fila in matriz:
@@ -20,7 +27,7 @@ def imprimir_matriz (matriz):
         c=0
         for elemento in fila:
             c+=1
-            if (c ==f): print (ROJO+ str(elemento)+ RESET, end=" " )
+            if (c == f): print (ROJO+ str(elemento)+ RESET, end=" " )
             else: print (elemento, end=" ")
         print("\n")
 
@@ -44,22 +51,22 @@ def calcular_dimencion(longitud, discretizacion):
 
 def crear_placa_inicial (largo, ancho):
     placa = []
-    for i in range(largo):
+    for i in range(ancho):
         fila_placa = []
-        for j in range(ancho):
+        for j in range(largo):
             if (i == 0):
-                if (j == 0 or j == ancho - 1):
-                    fila_placa.append(0)
+                if (j == 0 or j == largo - 1):
+                    fila_placa.append(1)
                 else:
                     fila_placa.append(TEMPERATURA_ARRIBA)
-            elif (i == (largo - 1)):
-                if (j == 0 or j == ancho - 1):
-                    fila_placa.append(0)
+            elif (i == (ancho - 1 )):
+                if (j == 0 or j == largo - 1):
+                    fila_placa.append(1)
                 else:
                     fila_placa.append(TEMPERATURA_ABAJO)
             elif (j == 0):
                 fila_placa.append(TEMPERATURA_IZQUIERDA)
-            elif (j == (ancho - 1)):
+            elif (j == (largo - 1)):
                 fila_placa.append(TEMPERATURA_DERECHA)
             else:
                 fila_placa.append(0)
@@ -79,11 +86,13 @@ def crear_matriz_de_ceros (largo, ancho):
 def no_es_borde_placha(posicion, dimension, largo_plancha, ancho_plancha):
     if (posicion < largo_plancha):
         return False
+
     busqueda = largo_plancha - 1
     while (busqueda < dimension - largo_plancha):
         if (posicion == busqueda or posicion == busqueda + 1):
             return False
         busqueda += largo_plancha
+
     if (posicion < dimension and posicion > dimension - largo_plancha):
         return False
     return True
@@ -104,21 +113,21 @@ def crear_matriz_A (largo, ancho):
 
 def crear_vector_b (largo, ancho):
     vector = []
-    for i in range(largo):
-        for j in range(ancho):
+    for i in range(ancho):
+        for j in range(largo):
             if (i == 0):
-                if (j == 0 or j == ancho - 1):
+                if (j == 0 or j == largo - 1):
                     vector.append(1)
                 else:
                     vector.append(TEMPERATURA_ARRIBA)
-            elif (i == (largo - 1)):
-                if (j == 0 or j == ancho - 1):
+            elif (i == (ancho - 1)):
+                if (j == 0 or j == largo - 1):
                     vector.append(1)
                 else:
                     vector.append(TEMPERATURA_ABAJO)
             elif (j == 0):
                 vector.append(TEMPERATURA_IZQUIERDA)
-            elif (j == (ancho - 1)):
+            elif (j == (largo - 1)):
                 vector.append(TEMPERATURA_DERECHA)
             else:
                 vector.append(0)
@@ -210,7 +219,11 @@ def aplicar_metodo_gauss_seidez(matriz, vector, solucion_inicial, tolerancia, ma
 def resolucion_por_gauss_seidez(largo, ancho):
     dimension = largo * ancho
     A = crear_matriz_A(largo, ancho)
+    imprimir_matriz(A)
+
     b = crear_vector_b(largo, ancho)
+    imprimir_vector(b)
+
     x0 = crear_solucion_inicial(dimension, 0)
     tolerancia = 0.000001
     tolerancia_iteraciones = 100000000
@@ -227,6 +240,11 @@ def main ():
     imprimir_vector(x)
     imprimir_vector(y)
     imprimir_vector(z)
+    imprimir_matriz(placa_uno)
+    imprimir_plancha(y,ancho_placa_uno, largo_placa_uno)
+    plt.figure()
+    plt.quiver(x, y, scale=5)
+    plt.show()
     return 0
 
 main ()
